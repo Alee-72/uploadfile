@@ -24,7 +24,7 @@ app.post("/picture", async (req, res) => {
     } else {
       const {picture} = req.files
 
-      picture.mv("./uploads/" + picture.name)
+      picture.mv("./src/" + picture.name)
 
       res.send({
         status: true,

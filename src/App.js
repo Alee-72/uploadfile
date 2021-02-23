@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form'
 import './App.css';
+import ali from '../src/ali.jpg';
 
 function App() {
   const { register, handleSubmit } = useForm()
@@ -17,10 +18,15 @@ function App() {
   }
 
   return (
+    <div>
     <form onSubmit={handleSubmit(onSubmit)}>
       <input ref={register} type="file" name="picture" />
       <button>Submit</button>
     </form>
+
+
+    <img src ={ali} alt ="loading"/>
+    </div>
   );
 }
 
