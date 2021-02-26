@@ -1,68 +1,96 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React File Upload
 
-## Available Scripts
+React frontend image upload with express backend server.js to handle file uploads. This is an excellent tutorial by [Traversy Media](http://www.traversymedia.com).
 
-In the project directory, you can run:
+*** Note: to open web links in a new window use: _ctrl+click on link_**
 
-### `yarn start`
+## Table of contents
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* [General info](#general-info)
+* [Screenshots](#screenshots)
+* [Technologies](#technologies)
+* [Setup](#setup)
+* [Features](#features)
+* [Status](#status)
+* [Inspiration](#inspiration)
+* [Contact](#contact)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## General info
 
-### `yarn test`
+* Uploads an image file from the React frontend. This file is fetched by the backend using express.js and stored in  'uploads' in the public folder.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* The frontend uses a FileUpload component with a [FormData object](https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData) with inputs for the file itself and a file name. The image will be displayed on the frontend.
 
-### `yarn build`
+* Includes a % upload complete progress-bar component.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Includes a dismissable status message component.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+* [React hooks](https://reactjs.org/docs/hooks-overview.html#state-hook) used to write state. React extension shows hooks and their states in the dev console.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Screenshots
 
-### `yarn eject`
+![Example screenshot](./img/screen-shot.png).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Technologies
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* [Node.js v12.3.1](https://nodejs.org/) javascript runtime using the [Chrome V8 engine](https://v8.dev/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* [Express middleware v4.17.1](https://expressjs.com/)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* [Express fileupload middleware v1.1.6-alpha.5](https://www.npmjs.com/package/express-fileupload)
 
-## Learn More
+* [React v16.10.2](https://reactjs.org/) Frontend javascript library.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* [Bootstrap front-end component library](https://getbootstrap.com/)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* [Font Awesome icons](https://fontawesome.com/)
 
-### Code Splitting
+* [React Hooks](https://reactjs.org/docs/hooks-overview.html#state-hook)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Fullstack Dev Setup
 
-### Analyzing the Bundle Size
+### `npm run dev`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+* Runs the front and backend simultaneously in development mode. It will open [http://localhost:3000](http://localhost:3000) to view in browser. Any code changes will automatically reload the browser.
 
-### Making a Progressive Web App
+## Code Examples
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+* FileUpload component try-catch to show percentage progress or error message.
 
-### Advanced Configuration
+```javascript
+    try {
+      const res = await axios.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: progressEvent => {
+          setUploadPercentage(parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total)));
+          setTimeout(() => setUploadPercentage(0), 10000);
+        }
+      });
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+      const { fileName, filePath } = res.data;
+      setUploadedFile({ fileName, filePath });
+      setMessage('File uploaded');
+    } catch(err) {
+      if(err.response.status === 500) {
+        setMessage('There was a problem with the server');
+      } else {
+        setMessage(err.response.data.msg);
+      }
+    }
+```
 
-### Deployment
+## Status & To-Do List
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+* Status: Completely updated oct 2019. Working full-stack image upload.
 
-### `yarn build` fails to minify
+* To do: Add functionality.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Inspiration
+
+[Traversy Media: React File Uploader With Express (Using React Hooks)](https://www.youtube.com/watch?v=b6Oe2puTdMQ)
+
+## Contact
+
+Repo created by [ABateman](https://www.andrewbateman.org) - feel free to contact me!

@@ -1,41 +1,26 @@
-const express = require("express")
-const fileUpload = require("express-fileupload")
-const cors = require("cors")
-const morgan = require("morgan")
+const express = require('express');
+const fileUpload = require('express-fileupload');
 
-const app = express()
+const app = express();
 
-app.use(fileUpload({
-  createParentPath: true
-}))
+app.use(fileUpload());
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(morgan("dev"))
-
-app.post("/picture", async (req, res) => {
-  try {
-    if(!req.files){
-      res.send({
-        status: false,
-        message: "No files"
-      })
-    } else {
-      const {picture} = req.files
-
-      picture.mv("./src/" + picture.name)
-
-      res.send({
-        status: true,
-        message: "File is uploaded"
-      })
-    }
-  } catch (e) {
-    res.status(500).send(e)
+// Upload endpoint
+app.post('/upload', (req, res) => {
+  if(req.files === null) {
+    return res.status(400).json({msg: 'No file was uploaded'});
   }
-})
 
-const port = process.env.PORT || 4000
+  const file = req.files.file;
 
-app.listen(port, () => console.log(`Server is running on port ${port}`))
+  file.mv(`${__dirname}/client/public/uploads/${file.name}`, err => {
+    if(err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+  
+    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  });
+});
+
+app.listen(5000, () => console.log('Server started...'));
